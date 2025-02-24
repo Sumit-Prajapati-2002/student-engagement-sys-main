@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+// Remove unused import
+// import { useState } from 'react';
 import { Card, Text, SimpleGrid } from '@mantine/core';
 import { NavigationButtons } from './NavigationButtons';
 

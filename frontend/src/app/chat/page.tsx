@@ -78,7 +78,7 @@ export default function ChatPage() {
   };
 
   return (
-    <Container className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col">
       {/* Main Chat Area */}
       <motion.div
         className="flex-1 flex flex-col bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-white/5 shadow-xl m-2"
@@ -190,6 +190,6 @@ export default function ChatPage() {
           </div>
         </form>
       </motion.div>
-    </Container>
+    </div>
   );
 } 

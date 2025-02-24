@@ -1,4 +1,5 @@
-import { AppShell, Container } from '@mantine/core';
+import { AppShell, Container, Button } from '@mantine/core';
+import Link from 'next/link';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,9 +12,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between h-full">
             <div className="text-white font-bold text-lg sm:text-xl">Career Roadmap</div>
             <nav className="flex gap-3 sm:gap-6">
-              <a href="/" className="text-white/80 hover:text-white transition-colors text-sm sm:text-base">Home</a>
-              <a href="/chat" className="text-white/80 hover:text-white transition-colors text-sm sm:text-base">Chat</a>
-              <a href="/jobs" className="text-white/80 hover:text-white transition-colors text-sm sm:text-base">Jobs</a>
+              <Link href="/" className="text-white/80 hover:text-white transition-colors text-sm sm:text-base">Home</Link>
+              <Link href="/chat" className="text-white/80 hover:text-white transition-colors text-sm sm:text-base">Chat</Link>
+              <Link href="/jobs" className="text-white/80 hover:text-white transition-colors text-sm sm:text-base">Jobs</Link>
             </nav>
           </div>
         </Container>
@@ -24,6 +25,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </Container>
       </main>
+
+      {/* Chat Button */}
+      <div className="fixed bottom-8 right-8">
+        <Link href="/chat">
+          <Button variant="filled" color="blue">
+            Chat
+          </Button>
+        </Link>
+      </div>
     </AppShell>
   );
 } 

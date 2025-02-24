@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Button, Container, Text } from '@mantine/core';
 import Link from 'next/link';
 import { useEffect } from 'react';
 
