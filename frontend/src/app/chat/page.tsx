@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Container, Text, Button } from '@mantine/core';
+import { Text, Button } from '@mantine/core';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 
@@ -78,7 +78,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <Container className="h-screen flex flex-col">
       {/* Main Chat Area */}
       <motion.div
         className="flex-1 flex flex-col bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-white/5 shadow-xl m-2"
@@ -190,6 +190,6 @@ export default function ChatPage() {
           </div>
         </form>
       </motion.div>
-    </div>
+    </Container>
   );
 } 
