@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Science Track - RIU</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #3730A3;
+            --secondary: #10B981;
+        }
+        
+        body {
+            background: #f8fafc;
+            scroll-behavior: smooth;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #10B981 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .content-list {
+            list-style-type: none;
+            padding-left: 1.5rem;
+        }
+
+        .content-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .content-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0.5rem;
+            height: 0.5rem;
+            background: var(--primary);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .content-list li:hover::before {
+            transform: translateY(-50%) scale(1.2);
+            background: var(--secondary);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -0.5rem;
+            top: 0;
+            width: 1rem;
+            height: 1rem;
+            background: var(--primary);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover::before {
+            background: var(--secondary);
+            transform: scale(1.2);
+        }
+
+        .nav-pill {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-pill:hover {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            height: 0.25rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .floating-nav {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 9999px;
+            padding: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .floating-nav-item {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .floating-nav-item:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Floating Navigation -->
+    <div class="floating-nav">
+        <a href="#intro" class="floating-nav-item" title="Introduction">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#roadmap" class="floating-nav-item" title="Roadmap">
+            <i class="fas fa-map"></i>
+        </a>
+        <a href="#capstone" class="floating-nav-item" title="Capstone">
+            <i class="fas fa-project-diagram"></i>
+        </a>
+        <a href="#contact" class="floating-nav-item" title="Contact">
+            <i class="fas fa-envelope"></i>
+        </a>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden" id="intro">
+        <!-- Back to Home Button -->
+        <a href="/" class="back-button inline-flex items-center text-white">
+            <span class="mr-2">Back to Home</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        
+        <div class="gradient-bg text-white py-20">
+            <div class="container mx-auto px-4 relative">
+                <div class="max-w-4xl" data-aos="fade-up">
+                    <h1 class="text-5xl font-bold mb-6">Research and Innovation Unit (RIU)</h1>
+                    <p class="text-xl opacity-90 mb-8">Advanced College of Engineering and Management</p>
+                    <div class="flex gap-4">
+                        <a href="#roadmap" class="bg-white text-indigo-600 px-6 py-3 rounded-full font-semibold hover:bg-opacity-90 transition duration-300">
+                            View Roadmap
+                        </a>
+                        <a href="#contact" class="bg-transparent border-2 border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-indigo-600 transition duration-300">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+                <div class="absolute right-0 bottom-0 opacity-10">
+                    <i class="fas fa-brain text-9xl float-animation"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        <!-- Introduction -->
+        <section class="glass-card p-8 mb-12 rounded-2xl" data-aos="fade-up">
+            <div class="max-w-4xl mx-auto">
+                <p class="text-gray-700 leading-relaxed text-lg">
+                    The Research and Innovation Unit (RIU) at Advanced College of Engineering and Management
+                    (Acem) is a dedicated platform for fostering academic and industry collaboration. RIU bridges
+                    the gap between theoretical knowledge and practical application by providing students
+                    opportunities to engage in research-driven, innovative projects.
+                </p>
+            </div>
+        </section>
+
+        <!-- Student Engagement -->
+        <section class="mb-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Student Engagement at RIU</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-2xl card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-bullseye text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Goals of Student Engagement</h3>
+                    <ul class="content-list">
+                        <li>Equip students with hands-on research and technical skills</li>
+                        <li>Provide mentorship and resources for academic projects</li>
+                        <li>Foster collaboration among students, faculty, and industry</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-tasks text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Standard Engagement Procedure</h3>
+                    <div class="space-y-4">
+                        <div class="timeline-item">
+                            <h4 class="font-semibold">Foundational Skills</h4>
+                            <p>Complete roadmap covering essential skills</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4 class="font-semibold">Study Groups</h4>
+                            <p>Collaborative learning in RIU Hall</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4 class="font-semibold">Deliverables</h4>
+                            <p>Submit reports and complete capstone project</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section id="roadmap" class="mb-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Data Science Roadmap</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Module 1 -->
+                <div class="glass-card p-6 rounded-2xl card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-broom text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">1. Data Cleaning</h3>
+                    <p class="text-gray-600 mb-4">Learn to preprocess and clean raw datasets</p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium mb-2">Skills:</h4>
+                            <ul class="content-list">
+                                <li>Handling missing values</li>
+                                <li>Data type conversions</li>
+                                <li>Text preprocessing</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Course:</h4>
+                            <a href="https://www.kaggle.com/learn/data-cleaning" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                Data Cleaning (Kaggle) →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 2 -->
+                <div class="glass-card p-6 rounded-2xl card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-chart-bar text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">2. EDA & Visualization</h3>
+                    <p class="text-gray-600 mb-4">Analyze and visualize data patterns</p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium mb-2">Skills:</h4>
+                            <ul class="content-list">
+                                <li>Descriptive statistics</li>
+                                <li>Visualization techniques</li>
+                                <li>Data storytelling</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Courses:</h4>
+                            <ul class="space-y-2">
+                                <li>
+                                    <a href="https://www.freecodecamp.org/learn/data-analysis-with-python/" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                        Data Analysis with Python (freeCodeCamp) →
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.geeksforgeeks.org/python-data-visualization/" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                        Data Visualization with Python (GeeksforGeeks) →
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.coursera.org/learn/python-data-visualization" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                        Data Visualization with Python (Coursera) →
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 3 -->
+                <div class="glass-card p-6 rounded-2xl card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-spider text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">3. Web Scraping & APIs</h3>
+                    <p class="text-gray-600 mb-4">Collect data programmatically</p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium mb-2">Skills:</h4>
+                            <ul class="content-list">
+                                <li>BeautifulSoup</li>
+                                <li>Selenium</li>
+                                <li>API Integration</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Courses:</h4>
+                            <ul class="space-y-2">
+                                <li>
+                                    <a href="https://www.freecodecamp.org/news/web-scraping-python-tutorial/" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                        Web Scraping with Python (freeCodeCamp) →
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.youtube.com/watch?v=ng2o98k983k" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                        Introduction to APIs (Corey Schafer) →
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 4 -->
+                <div class="glass-card p-6 rounded-2xl card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-calculator text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">4. Statistics & Probability</h3>
+                    <p class="text-gray-600 mb-4">Understand statistical concepts and probability</p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium mb-2">Skills:</h4>
+                            <ul class="content-list">
+                                <li>Descriptive statistics</li>
+                                <li>Inferential statistics</li>
+                                <li>Probability distributions</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Course:</h4>
+                            <a href="https://www.coursera.org/learn/stanford-statistics" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                Introduction to Statistics (Coursera) →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 5 -->
+                <div class="glass-card p-6 rounded-2xl card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-robot text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">5. Machine Learning</h3>
+                    <p class="text-gray-600 mb-4">Build predictive models using machine learning</p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium mb-2">Skills:</h4>
+                            <ul class="content-list">
+                                <li>Supervised learning</li>
+                                <li>Unsupervised learning</li>
+                                <li>Model evaluation</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Courses:</h4>
+                            <ul class="space-y-2">
+                                <li>
+                                    <a href="https://www.coursera.org/learn/machine-learning" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                        Machine Learning (Andrew Ng - Coursera) →
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.kaggle.com/learn/intro-to-machine-learning" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                        Intro to Machine Learning (Kaggle) →
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 6 -->
+                <div class="glass-card p-6 rounded-2xl card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-chart-line text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">6. Data Visualization</h3>
+                    <p class="text-gray-600 mb-4">Communicate insights through data visualization</p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium mb-2">Skills:</h4>
+                            <ul class="content-list">
+                                <li>Data visualization tools</li>
+                                <li>Storytelling with data</li>
+                                <li>Dashboard creation</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Course:</h4>
+                            <a href="https://analytics.google.com/analytics/academy/course/10" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition duration-300">
+                                Build Data Dashboards with Google Data Studio →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Capstone Project -->
+        <section id="capstone" class="mb-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Capstone Project</h2>
+            <div class="glass-card p-8 rounded-2xl">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="text-indigo-600 mb-4">
+                            <i class="fas fa-project-diagram text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">Project Scope</h3>
+                        <div class="space-y-4">
+                            <div class="timeline-item">
+                                <h4 class="font-semibold">Data Collection</h4>
+                                <p>Scrape or fetch data from APIs</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4 class="font-semibold">Analysis</h4>
+                                <p>Clean, analyze, and visualize data</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4 class="font-semibold">Implementation</h4>
+                                <p>Build models and create dashboards</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-indigo-600 mb-4">
+                            <i class="fas fa-clipboard-check text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">Deliverables</h3>
+                        <ul class="content-list">
+                            <li>Detailed project report</li>
+                            <li>GitHub repository with code</li>
+                            <li>Interactive dashboard</li>
+                            <li>Final presentation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-8 gradient-text">Contact RIU</h2>
+            <div class="glass-card p-8 rounded-2xl text-center">
+                <div class="text-indigo-600 mb-6">
+                    <i class="fas fa-envelope text-4xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Get in Touch</h3>
+                <p class="text-gray-600 mb-6">For inquiries or guidance, reach out to the RIU coordinator:</p>
+                <a href="mailto:riu@acem.edu.np" class="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition duration-300">
+                    <i class="fas fa-paper-plane"></i>
+                    riu@acem.edu.np
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="gradient-bg text-white py-12 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Research and Innovation Unit (RIU) - ACEM. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            offset: 100,
+            once: true
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html>

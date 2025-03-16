@@ -929,31 +929,55 @@ def chatbot():
     # For GET requests, render the chat interface
     return render_template("chat.html", chat_history=chat_history)
 
-@app.route("/chatbot")
-def chatbot_page():
-    return render_template('chatbot.html')
+# @app.route('/jobs', methods=['POST'])
+# def jobs_page():
+#     try:
+#         # Get the user's field from the request
+#         field = request.json.get('field', '')
 
-@app.route("/data-science")
-def data_science_page():
-    return render_template('datascience.html')
+#         # Create job search prompt
+#         search_prompt = f"""
+#         Based on the field '{field}', please provide a list of 10 relevant job opportunities.
+#         For each job, include:
+#         - Job Title
+#         - Required Skills
+#         - Experience Level
+#         - Brief Description
+#         - Career Growth Potential
+        
+#         Format the response in a clear, structured way.
+#         """
 
-@app.route("/jobs", methods=['GET'])
-def jobs_page():
-    try:
-        # Load initial jobs (first 10)
-        df = load_job_data()
-        initial_jobs = []
-        for _, row in df.head(10).iterrows():
-            initial_jobs.append({
-                'Job Title': row['Title'],
-                'Company': row['Company'],
-                'Job Description': row['jobpost'],
-                'Email': generate_company_email(row['Company'])
-            })
-        return render_template('jobs.html', jobs=initial_jobs)
-    except Exception as e:
-        return render_template('jobs.html', jobs=[], error=str(e))
+#         # Generate job listings using Groq
+#         chat_completion = client.chat.completions.create(
+#             messages=[
+#                 {
+#                     "role": "system",
+#                     "content": "You are a job search assistant helping users find relevant career opportunities."
+#                 },
+#                 {
+#                     "role": "user",
+#                     "content": search_prompt
+#                 }
+#             ],
+#             model="mixtral-8x7b-32768",
+#             temperature=0.7,
+#             max_tokens=2048,
+#             top_p=1,
+#             stream=False
+#         )
 
+#         # Extract job listings
+#         job_listings = chat_completion.choices[0].message.content
+#         print("Job listings response:", job_listings)
+
+#         # Return the data as JSON for React frontend
+#         return jsonify({'job_listings': job_listings})
+
+#     except Exception as e:
+#         print(f"Error in job search: {e}")
+#         return jsonify({'error': str(e)}), 500
+    
 @app.route('/search_jobs', methods=['POST'])
 def search_jobs():
     search_query = request.json.get('query', '')
@@ -992,6 +1016,63 @@ def search_jobs():
         return jsonify({'recommendations': recommendations})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+# @app.route("/jobs", methods=['GET'])
+# def jobs_page():
+#     try:
+#         # Load initial jobs (first 10)
+#         df = load_job_data()
+#         initial_jobs = []
+#         for _, row in df.head(10).iterrows():
+#             initial_jobs.append({
+#                 'Job Title': row['Title'],
+#                 'Company': row['Company'],
+#                 'Job Description': row['jobpost'],
+#                 'Email': generate_company_email(row['Company'])
+#             })
+#         return render_template('jobs.html', jobs=initial_jobs)
+#     except Exception as e:
+#         return render_template('jobs.html', jobs=[], error=str(e))
+
+# @app.route('/search_jobs', methods=['POST'])
+# def search_jobs():
+#     search_query = request.json.get('query', '')
+#     if not search_query:
+#         return jsonify({'error': 'Search query is required'}), 400
+    
+#     try:
+#         df = load_job_data()
+        
+#         # Create TF-IDF vectorizer
+#         tfidf = TfidfVectorizer(stop_words='english')
+        
+#         # Create TF-IDF matrix
+#         tfidf_matrix = tfidf.fit_transform(df['combined_text'])
+        
+#         # Transform search query
+#         query_vector = tfidf.transform([search_query])
+        
+#         # Calculate cosine similarity
+#         cosine_similarities = cosine_similarity(query_vector, tfidf_matrix).flatten()
+        
+#         # Get top recommendations
+#         related_docs_indices = cosine_similarities.argsort()[-5:][::-1]
+        
+#         # Get recommended jobs
+#         recommendations = []
+#         for idx in related_docs_indices:
+#             recommendations.append({
+#                 'title': df['Title'].iloc[idx],
+#                 'company': df['Company'].iloc[idx],
+#                 'description': df['jobpost'].iloc[idx],
+#                 'email': generate_company_email(df['Company'].iloc[idx]),
+#                 'similarity_score': float(cosine_similarities[idx])
+#             })
+        
+#         return jsonify({'recommendations': recommendations})
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/generate_roadmap', methods=['POST'])
 def generate_roadmap():

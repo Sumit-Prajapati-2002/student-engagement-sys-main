@@ -1,3 +1,8 @@
+// components/JobList.tsx
+"use client";
+
+import { Card, Badge, Loader } from "@mantine/core";
+
 interface Job {
   title: string;
   company: string;
@@ -14,54 +19,46 @@ interface JobListProps {
 export function JobList({ jobs, isLoading }: JobListProps) {
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      <div className="flex justify-center items-center h-64">
+        <Loader color="purple" size="lg" />
       </div>
     );
   }
 
   if (jobs.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-600">
-        No jobs found. Try a different search term.
+      <div className="text-center text-gray-400 mt-8">
+        <p>No jobs found. Try a different search term.</p>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-6 mt-8">
       {jobs.map((job, index) => (
-        <div
+        <Card
           key={index}
-          className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+          className="bg-[#1E1E1E] border border-gray-700 hover:border-purple-500 transition-all duration-300"
+          padding="lg"
         >
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
-              <p className="text-gray-600 mt-1">{job.company}</p>
-            </div>
-            <span className="text-sm text-gray-500">
-              Match: {Math.round(job.similarity_score * 100)}%
-            </span>
+          <div className="flex justify-between items-start mb-2">
+            <h2 className="text-xl font-semibold text-white">{job.title}</h2>
+            <Badge color="grape" variant="light" title="Similarity Score">
+              {Math.round(job.similarity_score * 100)}% Match
+            </Badge>
           </div>
-          <p className="mt-4 text-gray-700 line-clamp-3">{job.description}</p>
-          <div className="mt-4 flex justify-between items-center">
-            <a
-              href={`mailto:${job.email}`}
-              className="text-indigo-600 hover:text-indigo-800 flex items-center gap-2"
-            >
-              <i className="fas fa-envelope"></i>
-              Apply Now
-            </a>
-            <button
-              className="text-gray-600 hover:text-gray-800"
-              onClick={() => {/* Implement save job functionality */}}
-            >
-              <i className="far fa-bookmark"></i>
-            </button>
+
+          <p className="text-purple-300 font-medium mb-4">{job.company}</p>
+
+          <div className="mb-4">
+            <p className="text-gray-300 line-clamp-3">{job.description}</p>
           </div>
-        </div>
+
+          <div className="text-sm text-gray-400">
+            <p>Contact: {job.email}</p>
+          </div>
+        </Card>
       ))}
     </div>
   );
-} 
+}

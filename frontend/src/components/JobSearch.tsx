@@ -1,54 +1,65 @@
-'use client';
+// components/JSabcehor.tsx;
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
+import { Input, Button } from "@mantine/core";
+import axios from "axios";
 
 interface JobSearchProps {
   setSearchResults: (results: any[]) => void;
-  setIsLoading: (loading: boolean) => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 export function JobSearch({ setSearchResults, setIsLoading }: JobSearchProps) {
-  const [query, setQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      setError("Please enter a search term");
+      return;
+    }
+
+    setError("");
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/search_jobs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query }),
+      const response = await axios.post("/api/search_jobs", {
+        query: searchQuery, // This matches the expected parameter in your API route
       });
 
-      const data = await response.json();
-      setSearchResults(data.recommendations || []);
-    } catch (error) {
-      console.error('Error searching jobs:', error);
+      setSearchResults(response.data.recommendations || []);
+    } catch (err) {
+      console.error("Error searching jobs:", err);
+      setError("Failed to search jobs. Please try again.");
+      setSearchResults([]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="mb-8">
-      <form onSubmit={handleSearch} className="flex gap-4">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for jobs..."
-          className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    <div className="max-w-md mx-auto mb-8">
+      <div className="flex flex-col gap-4">
+        <Input
+          placeholder="Enter job title, skills, or keywords..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          size="lg"
+          className="bg-[#1E1E1E] text-white border-purple-500"
+          onKeyPress={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button
-          type="submit"
-          className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+
+        <Button
+          onClick={handleSearch}
+          className="bg-purple-600 hover:bg-purple-700 transition-colors"
+          size="lg"
         >
-          Search
-        </button>
-      </form>
+          Search Jobs
+        </Button>
+
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+      </div>
     </div>
   );
-} 
+}

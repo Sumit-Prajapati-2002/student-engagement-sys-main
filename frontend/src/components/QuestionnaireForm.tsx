@@ -42,12 +42,12 @@ function QuestionCard({ question, index, selectedAnswer, onSelect }: QuestionCar
                 ? 'bg-[#252525] border-2 border-[#8B5CF6]' 
                 : 'bg-[#1E1E1E] border border-[#333333]'
             } hover:border-[#8B5CF6] hover:-translate-y-1 hover:shadow-lg`}
-          >
+          > 
             <div className="flex items-center gap-4">
               <div className={`w-5 h-5 rounded-full border-2 transition-all duration-300 flex items-center justify-center ${
                 selectedAnswer === option ? 'border-[#8B5CF6]' : 'border-[#333333]'
               }`}>
-                {selectedAnswer === option && (
+                {selectedAnswer === option && ( 
                   <div className="w-3 h-3 rounded-full bg-[#8B5CF6]" />
                 )}
               </div>
