@@ -6,7 +6,7 @@ import { Container, Text, Button } from "@mantine/core";
 import { Header } from "@/components/Header";
 import html2pdf from "html2pdf.js";
 import { motion } from "framer-motion";
-import { div } from "framer-motion/client";
+
 
 interface RoadmapData {
   roadmap: string;
